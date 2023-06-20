@@ -5,13 +5,19 @@
 
 {% block content %}
 
-<h1>Ingresar Jugadores:</h1>
-<form action="", method="POST">
-    {% csrf_token %}
-    <table>
-        {{ form.as_p }}
-    </table>
-    <button type="submit">Enviar</button>
-</form>
-
+    <div class="container">
+            <h4>Ingresar Jugadores</h4>
+               <form id="form-control" action="", method="POST">
+                    <div class="form-group">
+                        {% csrf_token %}
+                        
+                        <table>
+                       
+                        {{ form }}
+                        
+                        </table> 
+                    </div>
+                    <button class="btn btn-primary btn-xl text-uppercase disabled" id="submitButton" type="submit">Enviar</button>   
+                </form>           
+    </div>
 {% endblock  %}
