@@ -9,8 +9,8 @@ class JugadorForm(forms.Form):
     email = forms.EmailField()
     celular = forms.CharField(max_length=15)
     telefono = forms.CharField(max_length=15)
-    egreso = forms.IntegerField()
-    fecha_contratacion = forms.DateField()
+    equipo = forms.IntegerField()
+    fecha_ingreso = forms.DateField()
 
 class UserRegistrationForm(UserCreationForm):
     email = forms.EmailField()

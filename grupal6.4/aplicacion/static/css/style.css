@@ -1,8 +1,13 @@
 nav, footer {
-    background-color: rgb(230, 198, 175);
+    background-color: rgb(241, 145, 76);
 }
 
 .h1-usuarios {
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-    color: blue;
+    color: rgb(8, 8, 8);s
+}
+.texto_bienvenida {
+text-align: center;
+font-family: 'Lucida Sans', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana Bold, sans-serif;
+color: rgb(17, 17, 136);
 }
