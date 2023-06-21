@@ -1,8 +1,11 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
+from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth.forms import UserCreationForm ,AuthenticationForm
 from .forms import JugadorForm
 from .models import Jugador
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 
 from .forms import UserRegistrationForm
 # Create your views here.
@@ -22,6 +25,7 @@ def home(request):
 
     return render(request, "users.html", context=context)
 
+@login_required
 def view_client(request):
 
     context = {"nombre": "Club Barcelona",
@@ -76,9 +80,29 @@ def register_user(request):
             form.save()
             username = form.cleaned_data['username']
             messages.success(request, f'Usuario {username} creado exitosamente!!')
-            return redirect('/home')
+            return redirect('home')
     else:
         form = UserRegistrationForm()
     
     context = {'form': form}
     return render(request, 'register_user.html', context)
+
+def signout(request):
+    logout(request)
+    return redirect('home')
+
+def login_page(request):
+    if request.method == 'GET':
+        return render(request, 'login_page.html',{
+        'form':AuthenticationForm
+        })
+    else:
+       user = authenticate(request, username= request.POST['username'], password= request.POST['password'])
+       if user is None:
+           return render(request, 'login_page.html',{
+            'form':AuthenticationForm,
+            'error': 'Usuario o contraseña incorrecta'
+            })
+       else:
+           login(request, user)
+           return redirect('home')
