@@ -1,11 +1,13 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group, Permission
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.forms import UserCreationForm ,AuthenticationForm
 from .forms import JugadorForm
 from .models import Jugador
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.contrib.contenttypes.models import ContentType
+
 
 from .forms import UserRegistrationForm
 # Create your views here.
@@ -106,3 +108,88 @@ def login_page(request):
        else:
            login(request, user)
            return redirect('home')
+
+#######   funciones para generar el admin de usuarios 
+def admin_usuarios(request):
+    if request.method == 'POST':
+        if 'create_user' in request.POST:
+            username = request.POST['username']
+            password = request.POST['password']
+            group_id = request.POST['group']
+
+            user = User.objects.create_user(username=username, password=password)
+            group = Group.objects.get(id=group_id)
+            user.groups.add(group)
+
+        elif 'update_user' in request.POST:
+            user_id = request.POST['user_id']
+            username = request.POST['username']
+            password = request.POST['password']
+            group_id = request.POST['group']
+
+            user = User.objects.get(id=user_id)
+            user.username = username
+            if password:
+                user.set_password(password)
+            user.groups.clear()
+            group = Group.objects.get(id=group_id)
+            user.groups.add(group)
+            user.save()
+
+        elif 'delete_user' in request.POST:
+            user_id = request.POST['user_id']
+            user = User.objects.get(id=user_id)
+            user.delete()
+
+        elif 'create_group' in request.POST:
+            name = request.POST['group_name']
+            group = Group.objects.create(name=name)
+
+        elif 'update_group' in request.POST:
+            group_id = request.POST['group_id']
+            name = request.POST['group_name']
+
+            group = Group.objects.get(id=group_id)
+            group.name = name
+            group.save()
+
+        elif 'delete_group' in request.POST:
+            group_id = request.POST['group_id']
+            group = Group.objects.get(id=group_id)
+            group.delete()
+
+        elif 'create_permission' in request.POST:
+            name = request.POST['permission_name']
+            
+           
+            
+        elif 'update_permission' in request.POST:
+            permission_id = request.POST['permission_id']
+            name = request.POST['permission_name']
+            content_type_id = request.POST['content_type']
+            
+
+            permission = Permission.objects.get(id=permission_id)
+            permission.name = name
+            permission.content_type = ContentType.objects.get(id=content_type_id)
+            
+            permission.save()
+
+        elif 'delete_permission' in request.POST:
+            permission_id = request.POST['permission_id']
+            permission = Permission.objects.get(id=permission_id)
+            permission.delete()
+
+        return redirect('admin_usuarios')
+
+    users = User.objects.all()
+    groups = Group.objects.all()
+    permissions = Permission.objects.all()
+    content_types = ContentType.objects.all()
+
+    return render(request, 'admin_usuarios.html', {
+        'users': users,
+        'groups': groups,
+        'permissions': permissions,
+        
+    })

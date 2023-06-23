@@ -1,0 +1,131 @@
+{% extends 'base_layout.html' %}
+{% load static %}
+
+{% block content %}
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Administración</title>
+  <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+  <div class="container">
+    <h4>Administracion de Usuarios</h4>
+
+    <h6>USUARIOS</h6>
+    <div class="crud-section">
+      <h6>Crear Usuario</h6>
+      <form method="post">
+        {% csrf_token %}
+        <input type="text" name="username" placeholder="Nombre de usuario" required>
+        <input type="password" name="password" placeholder="Contraseña" required>
+        <select name="group">
+          {% for group in groups %}
+            <option value="{{ group.id }}">{{ group.name }}</option>
+          {% endfor %}
+        </select>
+        <button type="submit" name="create_user">Crear</button>
+      </form>
+    </div>
+<br>
+    <div class="crud-section">
+      <h6>Editar/Eliminar Usuario</h6>
+        <tbody>
+          {% for user in users %}
+            <tr>
+              <td>{{ user.username }}</td>
+              <td>{% if user.groups.first %}{{ user.groups.first.name }}{% else %}Sin Grupo{% endif %}</td>
+              <td>
+                <form method="post">
+                  {% csrf_token %}
+                  <input type="hidden" name="user_id" value="{{ user.id }}">
+                  <input type="text" name="username" placeholder="Nombre de usuario" value="{{ user.username }}" required>
+                  <input type="password" name="password" placeholder="Contraseña">
+                  <select name="group">
+                    {% for group in groups %}
+                      <option value="{{ group.id }}" {% if user.groups.exists and group.id == user.groups.first.id %}selected{% endif %}>{{ group.name }}</option>
+                    {% endfor %}
+                  </select>
+                  <button type="submit" name="update_user">Guardar</button>
+                  <button type="submit" name="delete_user">Eliminar</button>
+                </form>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+<br>
+    <h6>GRUPOS</h6>
+    <div class="crud-section">
+      <h6>Crear Grupo</h6>
+      <form method="post">
+        {% csrf_token %}
+        <input type="text" name="group_name" placeholder="Nombre del grupo" required>
+        <button type="submit" name="create_group">Crear</button>
+      </form>
+    </div>
+<br>
+    <div class="crud-section">
+      <h6>Editar/Eliminar Grupo</h6>
+      
+          {% for group in groups %}
+            <tr>
+              <td>{{ group.name }}</td>
+              <td>
+                <form method="post">
+                  {% csrf_token %}
+                  <input type="hidden" name="group_id" value="{{ group.id }}">
+                  <input type="text" name="group_name" placeholder="Nombre del grupo" value="{{ group.name }}" required>
+                  <button type="submit" name="update_group">Guardar</button>
+                  <button type="submit" name="delete_group">Eliminar</button>
+                </form>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+<br>
+    <h6>PERMISOS</h6>
+    
+<br>
+
+    <div class="crud-section">
+      <h6>Editar/Eliminar Permiso</h6>
+      <table>
+        <thead>
+          <tr>
+            <th>Permisos Creados</th>
+            </tr>
+        </thead>
+        <tbody>
+          
+          {% for permission in permissions %}
+            <tr>
+              <br>
+              <td>{{ permission.name }}</td>
+              <br>
+              <td>{{ permission.content_type }}</td>
+            </thead>  
+                <form method="post">
+                  {% csrf_token %}
+                  <input type="hidden" name="permission_id" value="{{ permission.id }}">
+                  <input type="text" name="permission_name" placeholder="Nombre del permiso" value="{{ permission.name }}" required>
+                  
+             
+                  <button type="submit" name="update_permission">Guardar</button>
+                  <button type="submit" name="delete_permission">Eliminar</button>
+                </form>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</body>
+</html>
+{% endblock  %}
