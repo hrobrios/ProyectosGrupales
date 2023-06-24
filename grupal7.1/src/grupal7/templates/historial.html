@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>historial de pedidos</h1>
+
+<h3>descripción</h3>
+<div class="container">
+    {% for pedido in pedidos %}
+    <ul>
+        <li>Nombre: {{ pedido.nombre }}</li>
+        <li>Direccion: {{ pedido.direccion }}</li>
+        <li>Email: {{ pedido.email }}</li>
+    </ul>
+    {% endfor %}
+</div>
+
+{% endblock %}
